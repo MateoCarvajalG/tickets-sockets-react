@@ -1,8 +1,13 @@
+import RouterPage from './views/Router.jsx';
+import {UiProvider} from './context/UIContext'
+
 function App() {
   return (
-    <div className="App">
-     <h1>hola mundo</h1>
-    </div>
+    <>
+    <UiProvider>
+      <RouterPage/>
+    </UiProvider>
+    </>
   );
 }
 
