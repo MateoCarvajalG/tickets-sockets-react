@@ -35,7 +35,7 @@ const RouterPage = () => {
                     {
                     key: '1',
                     icon: <UserOutlined />,
-                    label: <Link to="/ingresar"> Ingresar</Link>,
+                    label: <Link to="/"> Ingresar</Link>,
                     },
                     {
                     key: '2',
@@ -60,7 +60,7 @@ const RouterPage = () => {
                 }}
                 >   
                     <Routes>
-                        <Route path="/ingresar" element={<Login/>}/>
+                        <Route path="/" element={<Login/>}/>
                         <Route path="/cola" element={<Cola/>}/>
                         <Route path="/crearTicket" element={<AddTicket/>}/>
                         <Route path="/desktop" element={<Desktop/>}/>

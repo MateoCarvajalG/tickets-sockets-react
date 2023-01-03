@@ -2,13 +2,21 @@ import React from 'react'
 import {Row,Col,Typography,Button,Divider} from 'antd'
 import {DownloadOutlined} from '@ant-design/icons'
 import { useHideMenu } from '../../hooks/useHideMenu'
+import { useContext } from 'react'
+import { SocketContext } from '../../context/SocketContext'
+import { useState } from 'react'
 
 const {Title,Text} = Typography
 
 const AddTicket = () => {
   useHideMenu(true)
+
+  const {socket} = useContext(SocketContext)
+  const [lastTicket, setLastTicket]= useState({})
   const newTicket =()=>{
-    console.log('new Ticket')
+    socket.emit('new-ticket',null,(ticket)=>{
+      setLastTicket(ticket)
+    })
   }
   return (
     <>
@@ -35,7 +43,7 @@ const AddTicket = () => {
           </Text>
           <br />
           <Text type='success' style={{fontSize:55}}>
-            55
+            {lastTicket.number}
           </Text>
         </Col>
       </Row>

@@ -1,26 +1,44 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import {Row,Col,Typography,Button,Divider} from 'antd'
 import {CloseCircleOutlined,RightOutlined} from '@ant-design/icons'
 import { useHideMenu } from '../../hooks/useHideMenu'
+import { getUsuarioStorage } from '../../helpers/getUsuarioStorage'
+import { useNavigate } from 'react-router-dom'
+import { useContext } from 'react'
+import { SocketContext } from '../../context/SocketContext'
 const {Title,Text} = Typography
 
 const Desktop = () => {
 
+  const navigate = useNavigate()
+  const {socket} = useContext(SocketContext)
+
+  const [usuario] = useState(getUsuarioStorage)
+  const [ticket,setTicket]=useState(null)
   useHideMenu(false)
   const salir = ()=>{
-    console.log('salir')
+    localStorage.clear()
+    navigate('/',{ replace: true })
   }
 
   const nextTicket=()=>{
-    console.log('siguiente ticket')
+    socket.emit('next-ticket-to-work',usuario,(ticket)=>{
+      setTicket(ticket)
+    })
   }
+  
+  useEffect(()=>{
+    if(!usuario.agente && !usuario.escritorio){
+      return navigate('/')
+    }
+  },[])
   return (
     <>
       <Row>
          <Col span={20}>  
-            <Title level={2}> Mateo </Title>
+            <Title level={2}> {usuario.agente} </Title>
             <Text> Usted esta trabajando en el escritorio: </Text>
-            <Text type='success'>5</Text>
+            <Text type='success'>{usuario.escritorio}</Text>
          </Col>
          <Col span={4} align="right">
             <Button
@@ -33,15 +51,19 @@ const Desktop = () => {
          </Col>
       </Row>
       <Divider/>
-      <Row>
-        <Col>
-          <Text> Esta atentiendo el ticket numero: </Text>
-          <Text
-            style={{fontSize:30}}
-            type='danger'
-            >55</Text>
-        </Col>
-      </Row>
+      {
+        ticket && (
+        <Row>
+          <Col>
+            <Text> Esta atentiendo el ticket numero: </Text>
+            <Text
+              style={{fontSize:30}}
+              type='danger'
+              >{ticket.number}</Text>
+          </Col>
+        </Row>
+        )
+      }
       <Row>
         <Col offset={18} span={6} align="right">
           <Button
